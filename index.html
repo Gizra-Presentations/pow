@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Gizra - UNDG</title>
+		<title>Gizra - Pow</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="author" content="amitaibu">
 
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -66,6 +66,16 @@
 					</aside>
 				</section>
 
+				<!-- PowToon animation settings -->
+				<section>
+					<img src="https://cloud.githubusercontent.com/assets/125707/13102908/6ee97c1e-d55a-11e5-8cd9-7974379605ac.jpg" alt="" />
+				</section>
+
+				<!-- Powtoon as Elm model -->
+				<section>
+					<img src="https://cloud.githubusercontent.com/assets/125707/13102968/c681faa0-d55a-11e5-8123-cdf28bad182f.jpg" alt="" />
+				</section>
+
 
 				<section data-background="https://cloud.githubusercontent.com/assets/125707/12292817/67ad3814-b9f8-11e5-97ec-b5c201fcf4a3.jpg">
 					<aside class="notes">
@@ -116,19 +126,176 @@
 				<section data-background-iframe="http://gfycat.com/ifr/SillyHauntingBlackwidowspider">
 				</section>
 
-				<!-- UNFPA -->
+				<!-- Elm Intro -->
 
 				<section>
-					<img src="https://cloud.githubusercontent.com/assets/125707/12973580/0d4c8788-d0b6-11e5-8f75-9de5e71cbcf3.jpg" alt="" class="stretch"/>
-
-					<aside class="notes">
-						Security audit, code review <br>
-						Continus integration - automatic tests <br>
-						Performance audit (reduce cache) <br>
-						Best practices
-					</aside>
+					<h2>Elm</h2>
 				</section>
 
+				<section data-background-video="http://zippy.gfycat.com/AdeptLargeHousefly.webm" data-background-video-loop>
+					<aside class="notes">
+						time travel
+			    </aside>
+        </section>
+
+        <section>
+						<h2>Counter Example</h2>
+	          <img src="https://cloud.githubusercontent.com/assets/125707/9739824/2fcc8cd0-565a-11e5-8024-0d01200773cd.jpg" />
+        </section>
+
+        <section>
+          <small>Counter.elm</small>
+          <pre style="width: 100%;"><code data-trim>
+module Counter where
+
+import Html exposing (..)
+import Html.Events exposing (onClick)
+
+-- MODEL
+
+type alias Model = Int
+
+init : Int -> Model
+init count = count
+
+-- UPDATE
+
+type Action = Increment | Decrement
+
+update : Action -> Model -> Model
+update action model =
+  case action of
+    Increment -> model + 1
+    Decrement -> model - 1
+
+-- VIEW
+
+view : Signal.Address Action -> Model -> Html
+view address model =
+  div []
+    [ button [ onClick address Decrement ] [ text "-" ]
+    , div [] [ text (toString model) ]
+    , button [ onClick address Increment ] [ text "+" ]
+    ]
+          </code></pre>
+
+					<aside class="notes">
+						<div>
+							elm architecture
+						</div>
+						<div>
+							מה אפשר לעשות באפליקציה שלכם?
+						</div>
+						<div>
+							action is implemtation details
+						</div>
+						<div>
+							תגית של באטן פתוחה, תגית של דיו פתוחה
+						</div>
+
+			    </aside>
+        </section>
+
+				<section>
+           <img style="width: 100%;" src="https://cloud.githubusercontent.com/assets/125707/11406290/303332f8-93b5-11e5-982f-c03cba493dc8.png" />
+         </section>
+
+ 				<section>
+           <img src="https://cloud.githubusercontent.com/assets/125707/11406768/c6e62ee2-93b7-11e5-82aa-4a91ecefbbfa.png" />
+
+ 					<aside class="notes">
+ 						<div>
+ 							ברגע שאתה מספק את הקומפיילר, האפילקציה שלך פשוט עובדת
+ 						</div>
+ 						<div>
+ 							לא מפחד לכתוב חלקים גדולים מחדש
+ 						</div>
+
+ 			    </aside>
+         </section>
+
+				 <section>
+				 	<h3>No Side Effects</h3>
+					<small>And No Run Time Errors</small>
+				 </section>
+
+         <section>
+           <pre style="width: 100%;"><code data-trim>
+type alias Model = Int
+
+type Action
+ = GetDataFromServer
+ | UpdateDataFromServer Result
+
+GetDataFromServer ->
+ ( model, Http.get "https://example.com/api/data" |> Task.map UpdateDataFromServer )
+
+UpdateDataFromServer result ->
+ case result of
+   Ok val ->
+     ( { model = val } , Effects.none )
+   Err msg ->
+     ( model , Effects.none )
+
+           </code></pre>
+ 					<aside class="notes">
+ 						pure functions
+ 						היא אפשר להתעלם מטעויות
+ 			    </aside>
+         </section>
+
+
+				 <section>
+				 					Main.elm
+				 					<pre style="width: 100%;"><code data-trim>
+				 port dropzoneUploadedFile : Signal (Maybe Int)
+				 					</code></pre>
+
+				 					interop.js
+				 					<pre style="width: 100%;"><code data-trim>
+dropZone = new Dropzone();
+
+dropZone.on('complete', function(response) {
+ var id = parseInt(response.id);
+ elmApp.ports.dropzoneUploadedFile.send(id);
+});
+				 					</code></pre>
+
+				 					<aside class="notes">
+				 						שומר השער.
+				 			    </aside>
+
+ 				</section>
+
+				<section>
+					<h2>Unit Testing</h2>
+					<small>Without mocking the entire internet</small>
+				</section>
+
+
+       <section>
+
+				 <small>Counter.elm</small>
+				 <pre style="width: 100%;"><code data-trim>
+update : Action -> Model -> Model
+update action model =
+  case action of
+    Increment -> model + 1
+    Decrement -> model - 1
+				 </code></pre>
+
+					<small>CounterTest.elm</small>
+         <pre style="width: 100%;"><code data-trim>
+[ test "negative count" (assertEqual 0 (update Increment -1))
+, test "zero count"     (assertEqual 1 (update Increment  0))
+, test "positive count" (assertEqual 2 (update Increment  1))
+]
+         </code></pre>
+
+					<aside class="notes">
+						travis
+			    </aside>
+       </section>				 
 
 				<!-- Gizra Summary -->
 				<section>
